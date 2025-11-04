@@ -10,10 +10,10 @@ export const routes: Routes = [
         component: AuthLayoutComponent,
         children:[
             {path: '', redirectTo: 'login', pathMatch: 'full'},
-            {path: 'login', component: LoginComponent},
-            {path: 'register', component: RegisterComponent},
-            {path:'forgotpassword', component: ForgotpasswordComponent},
-            
+            {path: 'login', component: LoginComponent,title: 'Login'},
+            {path: 'register', component: RegisterComponent, title: 'Register'},
+            {path:'forgotpassword', component: ForgotpasswordComponent, title: 'Forgot Password'},
+
         ],
     },
     {path: '**', redirectTo: 'auth', pathMatch: 'full'},
