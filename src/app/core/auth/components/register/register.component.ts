@@ -1,11 +1,104 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
 
+  hidePassword = signal(true);
+  hideConfirmPassword = signal(true);
+  isLoading = signal(false);
+  isDropdownOpen = signal(false);
+  phoneNumber = signal('');
+
+  countries = signal([
+    { name: 'Egypt', code: '+20', flag: 'https://flagcdn.com/eg.svg' },
+    { name: 'United States', code: '+1', flag: 'https://flagcdn.com/us.svg' },
+    { name: 'United Kingdom', code: '+44', flag: 'https://flagcdn.com/gb.svg' },
+    { name: 'Australia', code: '+61', flag: 'https://flagcdn.com/au.svg' },
+    { name: 'Germany', code: '+49', flag: 'https://flagcdn.com/de.svg' },
+    { name: 'France', code: '+33', flag: 'https://flagcdn.com/fr.svg' },
+  ]);
+
+  selectedCountry = signal(this.countries()[0]);
+
+  registerForm: FormGroup = this.fb.group(
+    {
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      rePassword: ['', Validators.required],
+    },
+    {
+      validators: (form: FormGroup) =>
+        form.get('password')?.value === form.get('rePassword')?.value ? null : { mismatch: true },
+    }
+  );
+
+  ngOnInit(): void {
+    initFlowbite();
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen.update((v) => !v);
+  }
+
+  selectCountry(country: { name: string; code: string; flag: string }) {
+    this.selectedCountry.set(country);
+    this.isDropdownOpen.set(false);
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword.set(!this.hidePassword());
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.hideConfirmPassword.set(!this.hideConfirmPassword());
+  }
+
+  showPassword() {
+    return !this.hidePassword();
+  }
+
+  showConfirmPassword() {
+    return !this.hideConfirmPassword();
+  }
+
+  getFieldError(field: string) {
+    const control = this.registerForm.get(field);
+    if (!control || !control.touched) return null;
+
+    if (control.hasError('required')) return 'This field is required';
+    if (control.hasError('minlength'))
+      return `Minimum length is ${control.errors?.['minlength'].requiredLength}`;
+    if (control.hasError('email')) return 'Invalid email format';
+    if (control.hasError('pattern') && field === 'phone')
+      return 'Phone number must contain digits only';
+    if (control.hasError('pattern')) return 'Invalid format';
+    if (field === 'rePassword' && this.registerForm.hasError('mismatch'))
+      return 'Passwords do not match';
+
+    return null;
+  }
+
+  submitRegister() {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+    this.isLoading.set(true);
+    const formData = this.registerForm.value;
+    console.log('Register Data:', formData);
+  }
 }
