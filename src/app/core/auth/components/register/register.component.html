@@ -1,5 +1,5 @@
-<section class="register h-screen flex items-center justify-center">
-  <div class="w-full bg-transparent  p-4 sm:p-6 max-w-md mx-auto">
+<section class="register min-h-screen flex items-center justify-center">
+  <div class="w-full bg-transparent p-4 sm:p-6 max-w-md mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-4">Create Account</h1>
 
     <form [formGroup]="registerForm" (submit)="submitRegister()" class="space-y-2">
@@ -14,7 +14,7 @@
             type="text"
             formControlName="firstName"
             placeholder="firstName"
-            class="w-full px-3 py-2 border border-gray-300 rounded-sm bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             [class.border-red-500]="
               registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched
             "
@@ -32,7 +32,7 @@
             type="text"
             formControlName="lastName"
             placeholder="lastName"
-            class="w-full px-3 py-2 border border-gray-300 rounded-sm bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             [class.border-red-500]="
               registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched
             "
@@ -51,7 +51,7 @@
           type="text"
           formControlName="username"
           placeholder="user123"
-          class="w-full px-3 py-2 border border-gray-300 rounded-sm bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           [class.border-red-500]="
             registerForm.get('username')?.invalid && registerForm.get('username')?.touched
           "
@@ -69,7 +69,7 @@
           type="email"
           formControlName="email"
           placeholder="user@example.com"
-          class="w-full px-3 py-2 border border-gray-300 rounded-sm bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           [class.border-red-500]="
             registerForm.get('email')?.invalid && registerForm.get('email')?.touched
           "
