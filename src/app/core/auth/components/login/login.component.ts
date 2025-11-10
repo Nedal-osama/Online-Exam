@@ -49,6 +49,6 @@ export class LoginComponent implements OnInit {
     const formData = this.loginForm.value;
     console.log('login Data :', formData);
 
-    // API call
+
   }
 }
