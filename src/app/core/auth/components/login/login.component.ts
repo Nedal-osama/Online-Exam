@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { initFlowbite } from 'flowbite';
-
+import { Auth } from 'auth-Lib';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -38,17 +38,23 @@ export class LoginComponent implements OnInit {
     if (control.hasError('email')) return 'Invalid email address';
     return null;
   }
+  _auth=inject(Auth);
   submit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
+    if(this.loginForm.valid){
+     this.isLoading.set(true);
+     this._auth.login(this.loginForm.value).subscribe({
+      next:(res)=>{
+        this.isLoading.set(false);
+        console.log('login response :', res);
+      },
+      error:(err)=>{
+        this.isLoading.set(false);
+        this.errorMessage.set(err?.error?.message || 'An error occurred during login.');
+      }
+     });
     }
 
-    this.isLoading.set(true);
-    this.errorMessage.set('');
-    const formData = this.loginForm.value;
-    console.log('login Data :', formData);
-
+    this.isLoading.set(false);
 
   }
 }
