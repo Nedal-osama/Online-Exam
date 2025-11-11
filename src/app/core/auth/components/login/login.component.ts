@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { initFlowbite } from 'flowbite';
-import { Auth } from 'auth-Lib';
+import { Auth } from 'auth-lib';
 
 @Component({
   selector: 'app-login',

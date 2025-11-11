@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { initFlowbite } from 'flowbite';
-import { Auth } from 'auth-Lib';
+import { Auth } from 'auth-lib';
 
 @Component({
   selector: 'app-register',

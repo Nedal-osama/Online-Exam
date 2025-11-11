@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Auth } from 'auth-Lib';
+import { Auth } from 'auth-lib';
 import { initFlowbite } from 'flowbite';
 
 @Component({
