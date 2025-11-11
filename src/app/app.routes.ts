@@ -22,5 +22,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [{ path: 'home', component: HomeComponent, title: 'Home' }],
   },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' },
+{ path: '', redirectTo: 'main/home', pathMatch: 'full' },
+{ path: '**', redirectTo: 'main/home', pathMatch: 'full' },
+
 ];
