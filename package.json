@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "postinstall": "ng build auth-lib --configuration=production",
-    "prebuild": "ng build auth-lib --configuration=production",
-    "build": "ng build --configuration=production",
+    "preinstall": "npm run build:auth-lib",
+    "build:auth-lib": "ng build auth-lib --configuration=production",
+    "build": "npm run build:auth-lib && ng build --configuration=production",
     "start": "ng serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -32,7 +32,6 @@
     "@angular/router": "^20.3.0",
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@tailwindcss/postcss": "^4.1.16",
-    "auth-lib": "file:dist/auth-lib",
     "classlist.js": "^1.1.20150312",
     "flowbite": "^3.1.2",
     "google-libphonenumber": "^3.2.43",
