@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { Auth } from 'auth-Lib';
+
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -39,22 +40,40 @@ export class LoginComponent implements OnInit {
     return null;
   }
   _auth=inject(Auth);
+  _router=inject(Router)
   submit() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
     if(this.loginForm.valid){
      this.isLoading.set(true);
      this._auth.login(this.loginForm.value).subscribe({
       next:(res)=>{
         this.isLoading.set(false);
-        console.log('login response :', res);
+        if(res.message==='success'){
+           this.errorMessage.set('');
+          setTimeout(() => {
+            this._router.navigate(['/main/home'])
+          },1000);
+         this.isLoading.set(false);
+        }
       },
       error:(err)=>{
         this.isLoading.set(false);
-        this.errorMessage.set(err?.error?.message || 'An error occurred during login.');
+        console.log('Full error object:', err);
+       this.errorMessage.set(err.error.message);
       }
      });
     }
-
-    this.isLoading.set(false);
-
   }
+  getShortError(msg: string) {
+  const maxLength = 30;
+  return msg.length > maxLength ? msg.slice(0, maxLength) + '...Is Wrong' : msg;
+
+}
+closeError() {
+  this.errorMessage = signal('');
+  this.loginForm.reset();
+}
 }
