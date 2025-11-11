@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Auth } from 'auth-Lib';
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -12,12 +13,14 @@ import { initFlowbite } from 'flowbite';
 export class ForgotpasswordComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly _auth=inject(Auth);
   isLoading = signal(false);
   emailForm!: FormGroup;
   otpForm!: FormGroup;
   passwordForm!: FormGroup;
   errorMessage = signal('');
-  countdown = 60;
+  countdown = signal(60);
+  contDownInterval: any;
   userEmail = signal<string>('');
   currentStep = signal<'email' | 'otp' | 'newPassword'>('email');
   hidePassword = signal(true);
@@ -42,7 +45,7 @@ export class ForgotpasswordComponent implements OnInit {
 
     this.passwordForm = this.fb.group(
       {
-        password: ['', [Validators.required, Validators.minLength(6)]],
+       password: ['', [Validators.required, Validators.minLength(6),Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/ )]],
         newPassword: ['', Validators.required],
       },
       {
@@ -85,61 +88,124 @@ export class ForgotpasswordComponent implements OnInit {
 
     return null;
   }
-
-  emailSubmit() {
-    if (this.emailForm.invalid) {
-      this.emailForm.markAllAsTouched();
-      return;
-    }
-    this.isLoading.set(true);
-    this.errorMessage.set('');
-    const formData = this.emailForm.value;
-    console.log('Email Data:', formData);
-    this.userEmail.set(formData.email);
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.currentStep.set('otp');
-    }, 1000);
+// email submit
+ emailSubmit() {
+  if (this.emailForm.invalid) {
+    this.emailForm.markAllAsTouched();
+    return;
   }
+
+  this.isLoading.set(true);
+  this.errorMessage.set('');
+
+  this._auth.forgotPassword(this.emailForm.value).subscribe({
+    next: (res) => {
+      this.isLoading.set(false);
+      if (res.message === 'success') {
+      this.userEmail.set(this.emailForm.value.email);
+        this.currentStep.set('otp');
+        this.statCountDown();
+      }
+    },
+    error: (err) => {
+      this.isLoading.set(false);
+      this.errorMessage.set(err.error?.message || 'An error occurred. Please try again.');
+    }
+  });
+}
+
 
   otpSubmit(): void {
     if (this.otpForm.invalid) {
       this.otpForm.markAllAsTouched();
       return;
     }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
-    const resetCode = Object.values(this.otpForm.value).join('');
-    const payload = { resetCode };
-    console.log('OTP Payload:', payload);
+      const otpCode = Object.values(this.otpForm.value).join('');
+      this._auth.verifyResetCode({ resetCode:otpCode}).subscribe({
+      next:(res)=>{
+        this.isLoading.set(false);
+        if(res.status==='Success'){
+          this.currentStep.set('newPassword');
+        }
 
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.currentStep.set('newPassword');
-    }, 1000);
+      },
+      error:(err)=>{
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.stutus || 'An error occurred. Please try again.');
+      }
+
+    })
   }
+  //  start countdown for otp
+statCountDown() {
+    this.countdown.set(60);
+    clearInterval(this.contDownInterval);
+    this.contDownInterval = setInterval(() => {
+      this.countdown.update((v) => v - 1);
+      if (this.countdown() <= 0) {
+        clearInterval(this.contDownInterval);
+      }
+    }, 1000);
+}
+// recentCode for otp
+resentode(){
+  this.isLoading.set(true);
+  this.errorMessage.set('');
+  this._auth.forgotPassword(this.emailForm.value).subscribe({
+    next: (res) => {
+      this.isLoading.set(false);
+      if (res.message === 'success') {
+        this.statCountDown();
+      }
+    },
+    error: (err) => {
+      this.isLoading.set(false);
+      this.errorMessage.set(err.error?.message || 'OTP IS WRONG. Please try again.');
+    }
+  });
+}
+//Edit Email for otp
+editEmail(){
+  this.currentStep.set('email');
+}
 
+// Password Submit
   passwordSubmit() {
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched();
       return;
     }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
+     const payload = {
+    email: this.userEmail(),
+    newPassword: this.passwordForm.get('password')?.value
+  };
 
-    const payload = {
-      email: this.userEmail,
-      newPassword: this.passwordForm.value.newPassword,
-    };
-
-    console.log('Password :', payload);
-// test form only changed call api
-    setTimeout(() => {
-      this.isLoading.set(false);
-      console.log('Password reset successful!');
-      this.router.navigate(['/auth/login']);
-    }, 1000);
+    this._auth.resetPassword(payload).subscribe({
+      next:(res)=>{
+        this.isLoading.set(false);
+        if(res.message==='success'){
+           this.router.navigate(['/auth/login']);
+        }
+      },
+      error:(err)=>{
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'An error occurred. Please try again.');
+      }
+    });
   }
+ getShortError(msg: string) {
+  const maxLength = 30;
+  return msg.length > maxLength ? msg.slice(0, maxLength) + '...Is Wrong' : msg;
+
+}
+closeError() {
+  this.errorMessage = signal('');
+  this.emailForm.reset();
+  this.otpForm.reset();
+  this.passwordForm.reset();
+}
 }

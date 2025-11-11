@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChangePasswordResponse, DeleteAccountResponse, EditProfileResponse, ForgotPasswordResponse, GetUserInfoResponse, LoginResponse, RegisterResponse, ResetPasswordResponse, UserData, VerifyResetCodeResponse } from '../interfaces/userdata';
+import { UserData, LoginResponse, RegisterResponse, ChangePasswordResponse, DeleteAccountResponse, EditProfileResponse, GetUserInfoResponse, ForgotPasswordResponse, VerifyResetCodeResponse, ResetPasswordResponse } from '../interfaces/UserData';
 
 @Injectable({
   providedIn: 'root',
@@ -60,7 +60,7 @@ export class AuthAdabtor{
 
   adaptVerifyResetCode(data: any): VerifyResetCodeResponse {
     return {
-      message: data?.message ?? '',
+      status: data?.status ?? '',
     };
   }
   adaptResetPassword(data: any): ResetPasswordResponse {

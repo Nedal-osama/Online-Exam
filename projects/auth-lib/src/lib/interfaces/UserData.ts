@@ -75,7 +75,7 @@ export interface VerifyResetCodeRequest {
 }
 
 export interface VerifyResetCodeResponse {
-  message: string;
+    status?: string;
 }
 
 

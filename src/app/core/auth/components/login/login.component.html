@@ -5,14 +5,6 @@
       <div class="py-8 px-6">
         <h1 class="text-3xl font-bold text-gray-900 mb-10">Login</h1>
         <form [formGroup]="loginForm" (submit)="submit()" class="space-y-6">
-          @if (errorMessage()) {
-          <div
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm"
-          >
-            {{ errorMessage() }}
-          </div>
-          }
-
           <!-- Email  -->
           <div class="w-full">
             <label
@@ -59,6 +51,7 @@
                   loginForm.get('password')?.invalid && loginForm.get('password')?.touched
                 "
               />
+
               <button
                 type="button"
                 (click)="togglePasswordVisibility()"
@@ -103,6 +96,22 @@
             class="flex justify-end text-sm font-semibold text-blue-500 hover:underline dark:text-blue-400"
             >Forgot your Password?</a
           >
+          <!-- Erorr Message -->
+          @if (errorMessage()) {
+          <div
+            class="relative text-center mx-auto bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-600 px-4 py-3 rounded-sm text-md fw-semibold"
+          >
+            <<button
+              (click)="closeError()"
+              class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border border-red-600 dark:border-red-400 text-red-600 dark:text-red-400 font-bold hover:bg-red-100 dark:hover:bg-red-700 flex items-center justify-center"
+            >
+              &times;
+            </button>
+
+            {{ getShortError(errorMessage()) }}
+          </div>
+          }
+          <!-- Submit Button -->
           <div>
             <button
               type="submit"
