@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
   errorMessage = signal('');
   showPassword = signal(false);
   loginForm!: FormGroup;
-
+  _auth=inject(Auth);
+  _router=inject(Router)
   ngOnInit(): void {
     this.initeLogin();
     initFlowbite();
@@ -39,8 +40,6 @@ export class LoginComponent implements OnInit {
     if (control.hasError('email')) return 'Invalid email address';
     return null;
   }
-  _auth=inject(Auth);
-  _router=inject(Router)
   submit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
