@@ -3,10 +3,11 @@ import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from 'auth-lib';
 import { initFlowbite } from 'flowbite';
+import { InputErrorComponent } from "../../../../shared/components/inputErorr/inputerorr";
 
 @Component({
   selector: 'app-forgotpassword',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, InputErrorComponent],
   templateUrl: './forgotpassword.component.html',
   styleUrl: './forgotpassword.component.css',
 })
@@ -73,21 +74,7 @@ export class ForgotpasswordComponent implements OnInit {
     return !this.hideConfirmPassword();
   }
 
-  getFieldError(field: string) {
-    const control =
-      this.emailForm.get(field) || this.otpForm.get(field) || this.passwordForm.get(field);
-    if (!control || !control.touched) return null;
 
-    if (control.hasError('required')) return 'This field is required';
-    if (control.hasError('minlength'))
-      return `Minimum length is ${control.errors?.['minlength'].requiredLength}`;
-    if (control.hasError('email')) return 'Invalid email format';
-    if (control.hasError('pattern')) return 'Invalid format';
-    if (field === 'newPassword' && this.passwordForm.hasError('mismatch'))
-      return 'Passwords do not match';
-
-    return null;
-  }
 // email submit
  emailSubmit() {
   if (this.emailForm.invalid) {

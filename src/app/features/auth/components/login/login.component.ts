@@ -4,10 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { Auth } from 'auth-lib';
+import { InputErrorComponent } from "../../../../shared/components/inputErorr/inputerorr";
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, InputErrorComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -33,13 +34,6 @@ export class LoginComponent implements OnInit {
     this.showPassword.set(!this.showPassword());
   }
 
-  getFieldError(field: string): string | null {
-    const control = this.loginForm.get(field);
-    if (!control || !control.touched) return null;
-    if (control.hasError('required')) return 'This field is required';
-    if (control.hasError('email')) return 'Invalid email address';
-    return null;
-  }
   submit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();

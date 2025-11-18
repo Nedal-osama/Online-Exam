@@ -4,10 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { initFlowbite } from 'flowbite';
 import { Auth } from 'auth-lib';
+import { InputErrorComponent } from "../../../../shared/components/inputErorr/inputerorr";
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterModule, CommonModule],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule, InputErrorComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -76,23 +77,6 @@ export class RegisterComponent implements OnInit {
 
   showConfirmPassword() {
     return !this.hideConfirmPassword();
-  }
-
-  getFieldError(field: string) {
-    const control = this.registerForm.get(field);
-    if (!control || !control.touched) return null;
-
-    if (control.hasError('required')) return 'This field is required';
-    if (control.hasError('minlength'))
-      return `Minimum length is ${control.errors?.['minlength'].requiredLength}`;
-    if (control.hasError('email')) return 'Invalid email format';
-    if (control.hasError('pattern') && field === 'phone')
-      return 'Phone number must contain digits only';
-    if (control.hasError('pattern')) return 'Invalid format';
-    if (field === 'rePassword' && this.registerForm.hasError('mismatch'))
-      return 'Passwords do not match';
-
-    return null;
   }
 
   submitRegister() {

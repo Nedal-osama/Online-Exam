@@ -1,5 +1,5 @@
 <section class="register min-h-screen flex items-center justify-center">
-  <div class="w-full bg-transparent p-4 sm:p-6 max-w-md mx-auto">
+  <div class="w-full bg-transparent p-4 sm:p-6 max-w-sm mx-auto ">
     <h1 class="text-3xl font-bold text-gray-900 mb-4">Create Account</h1>
 
     <form [formGroup]="registerForm" (submit)="submitRegister()" class="space-y-2">
@@ -19,9 +19,7 @@
               registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched
             "
           />
-          @if (getFieldError('firstName')) {
-          <p class="text-red-600 text-xs mt-1">{{ getFieldError('firstName') }}</p>
-          }
+         <app-input-error [control]="registerForm.get('firstName')"></app-input-error>
         </div>
         <div class="flex-1">
           <label for="lastName" class="block text-md font-medium text-gray-700 mb-1"
@@ -37,9 +35,7 @@
               registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched
             "
           />
-          @if (getFieldError('lastName')) {
-          <p class="text-red-600 text-xs mt-1">{{ getFieldError('lastName') }}</p>
-          }
+         <app-input-error [control]="registerForm.get('lastName')"></app-input-error>
         </div>
       </div>
 
@@ -56,9 +52,7 @@
             registerForm.get('username')?.invalid && registerForm.get('username')?.touched
           "
         />
-        @if (getFieldError('username')) {
-        <p class="text-red-600 text-xs mt-1">{{ getFieldError('username') }}</p>
-        }
+        <app-input-error [control]="registerForm.get('username')"></app-input-error>
       </div>
 
       <!-- Email -->
@@ -74,9 +68,7 @@
             registerForm.get('email')?.invalid && registerForm.get('email')?.touched
           "
         />
-        @if (getFieldError('email')) {
-        <p class="text-red-600 text-xs mt-1">{{ getFieldError('email') }}</p>
-        }
+        <app-input-error [control]="registerForm.get('email')"></app-input-error>
       </div>
 
       <!-- Phone -->
@@ -149,9 +141,7 @@
           </ul>
           }
         </div>
-        @if (getFieldError('phone')) {
-        <p class="mt-1 text-xs text-red-500">{{ getFieldError('phone') }}</p>
-        }
+         <app-input-error [control]="registerForm.get('phone')"></app-input-error>
       </div>
 
       <!-- Password & Confirm Password -->
@@ -206,9 +196,7 @@
           </button>
         </div>
 
-        @if (getFieldError('password')) {
-        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ getFieldError('password') }}</p>
-        }
+        <app-input-error [control]="registerForm.get('password')"></app-input-error>
       </div>
 
       <div>
@@ -261,9 +249,7 @@
             }
           </button>
         </div>
-        @if (getFieldError('rePassword')) {
-        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ getFieldError('rePassword') }}</p>
-        }
+        <app-input-error [control]="registerForm.get('rePassword')"></app-input-error>
       </div>
        @if (errorMessage()) {
           <div
@@ -284,8 +270,7 @@
       <button
         type="submit"
         [disabled]="isLoading()"
-        class="w-full py-2 px-3 rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium mt-3"
-      >
+          class="btn group relative flex justify-center" >
         @if (isLoading()) {
         <svg
           class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"

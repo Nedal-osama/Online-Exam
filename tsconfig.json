@@ -12,7 +12,6 @@
       ],
       "auth-lib": [
         "./dist/auth-lib",
-        "./dist/auth-lib"
       ]
     },
     "strict": true,
